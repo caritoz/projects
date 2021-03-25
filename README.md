@@ -17,6 +17,7 @@ $ composer update
 2. To start a development environment for the first time, run
 ```
     $ sudo docker-compose up -d --build
+```
 
 3. Open a terminal and composer install
 ```

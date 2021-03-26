@@ -17,14 +17,14 @@
                     </tr>
                     </thead>
                     <tbody>
-                    @foreach ($projects as $key => $project)
+                    @forelse ($projects as $key => $project)
                         <tr>
                             <th scope="row">{{$project->id}}</th>
                             <td>{{ $project->name }}</td>
                             <td>
                                 <div class="clearfix">
-{{--                                    <a href="{{ route('projects.show', $project->id)}}" title="Edit" class="btn btn-link float-left"><i class="bi bi-eye"></i></a>--}}
-{{--                                    <a href="{{ route('projects.edit', $project->id)}}" title="Edit" class="btn btn-link float-left"><i class="bi bi-pencil-square"></i></a>--}}
+                                    <a href="{{ route('tables.index', $project->id)}}" title="View" class="btn btn-link float-left">View Tables</a>
+                                    <a href="{{ route('tables.create', $project->id)}}" title="Add++" class="btn btn-link float-left">Add Table [++]</a>
                                     <form action="{{ route('projects.destroy', $project->id)}}" method="post">
                                         @csrf
                                         @method('DELETE')
@@ -33,12 +33,16 @@
                                 </div>
                             </td>
                         </tr>
-                    @endforeach
+                    @empty
+                        <tr>
+                            <td>There are no project</td>
+                        </tr>
+                    @endforelse
                     </tbody>
                 </table>
             </div>
             <div class="col-md-12">
-{{--                {{ $projects->links() }}--}}
+                {{ $projects->links() }}
             </div>
         </div>
     </div>

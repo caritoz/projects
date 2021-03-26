@@ -2,29 +2,50 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\TableFormRequest;
+use App\Project;
 use App\Table;
 use Illuminate\Http\Request;
 
+/**
+ * @property Table table
+ */
 class TableController extends Controller
 {
     /**
+     * @var Table
+     */
+    protected $table;
+
+    public function __construct(Table $table)
+    {
+        $this->table = $table;
+    }
+
+    /**
      * Display a listing of the resource.
      *
+     * @param Project $project
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Project $project)
     {
-        //
+        $tables = $this->table->where('project_id', $project->id)->orderBy('updated_at', 'desc')->paginate(4);
+
+        return view('tables.index', ['tables' => $tables, 'project' => $project]);
     }
 
     /**
      * Show the form for creating a new resource.
      *
+     * @param Project $project
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Project $project)
     {
-        //
+        $project = Project::findOrFail($project->id);
+
+        return view('tables.create', compact( 'project', $project));
     }
 
     /**
@@ -33,43 +54,16 @@ class TableController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(TableFormRequest $request)
     {
-        //
-    }
+        $table = new Table();
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Table  $table
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Table $table)
-    {
-        //
-    }
+        $table->create([
+            'name'          => $request->name,
+            'project_id'    => $request->project_id
+        ]);
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Table  $table
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Table $table)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Table  $table
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Table $table)
-    {
-        //
+        return redirect( route('tables.index', $request->project_id) );
     }
 
     /**

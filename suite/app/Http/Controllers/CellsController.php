@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Cells;
+use App\Http\Requests\CellsFormRequest;
+use App\Table;
 use Illuminate\Http\Request;
 
 class CellsController extends Controller
@@ -22,9 +24,11 @@ class CellsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create( Table $table )
     {
-        //
+        $table = Table::findOrFail($table->id);
+
+        return view('cells.create', compact( 'table', $table) );
     }
 
     /**
@@ -33,43 +37,19 @@ class CellsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CellsFormRequest $request)
     {
-        //
-    }
+        $table = Table::findOrFail($request->table_id);
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Cells  $cells
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Cells $cells)
-    {
-        //
-    }
+        $cells = new Cells();
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Cells  $cells
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Cells $cells)
-    {
-        //
-    }
+        $cells->create([
+            'description'   => $request->description,
+            'row_id'        => $request->row_id,
+            'column_id'     => $request->column_id
+        ]);
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Cells  $cells
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Cells $cells)
-    {
-        //
+        return redirect( route('tables.index', $table->project()->first()->id) );
     }
 
     /**

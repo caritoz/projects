@@ -17,6 +17,7 @@ class CreateColumnsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('table_id');
             $table->string('name');
+            $table->boolean('is_header')->default(false);
             $table->timestamps();
 
             $table->foreign('table_id')

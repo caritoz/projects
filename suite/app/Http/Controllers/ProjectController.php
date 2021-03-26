@@ -20,15 +20,11 @@ class ProjectController extends Controller
 
     /**
      * Display a listing of the resource.
-     *
-     * @param Project $project
      * @return void
      */
-    public function index(  )
+    public function index()
     {
-        $this->middleware('auth');
-
-        $projects = Project::all();
+        $projects = $this->project->orderBy('updated_at', 'desc')->paginate(5);
 
         return view('projects.index', compact('projects', $projects));
     }
@@ -61,57 +57,25 @@ class ProjectController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \App\Project  $project
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Project $project)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Project  $project
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Project $project)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Project  $project
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Project $project)
-    {
-        //
-    }
-
-    /**
      * Remove the specified resource from storage.
      *
      * @param  \App\Project  $project
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Project $project)
+    public function destroy($id)
     {
         try
         {
-            $project = $this->project->findOrFail($project->id);
+            $this->project->projectDestroy($id);
+//            Project::destroy($project->id);
 
-            Project::destroy($project->id);
-
+            return redirect('/projects');
         }
         catch (Exception $ex)
         {
             // something...
+
+            echo $ex->getTraceAsString();
         }
     }
 }

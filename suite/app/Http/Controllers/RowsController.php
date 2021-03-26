@@ -2,19 +2,35 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\RowsFormRequest;
 use App\Rows;
+use App\Table;
 use Illuminate\Http\Request;
 
 class RowsController extends Controller
 {
+    protected $rows;
+
+    /**
+     * RowsController constructor.
+     * @param Rows $row
+     */
+    public function __construct(Rows $rows)
+    {
+        $this->rows = $rows;
+    }
+
     /**
      * Display a listing of the resource.
      *
+     * @param Table $table
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Table $table)
     {
-        //
+        $rows = $this->rows->where('table_id', $table->id)->orderBy('updated_at', 'desc')->paginate(4);
+
+        return view('rows.index', ['rows' => $rows, 'table' => $table] );
     }
 
     /**
@@ -22,9 +38,11 @@ class RowsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create( Table $table )
     {
-        //
+        $table = Table::findOrFail($table->id);
+
+        return view('rows.create', compact( 'table', $table) );
     }
 
     /**
@@ -33,43 +51,16 @@ class RowsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(RowsFormRequest $request)
     {
-        //
-    }
+        $rows = new Rows();
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Rows  $rows
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Rows $rows)
-    {
-        //
-    }
+        $rows->create([
+            'name'        => $request->name,
+            'table_id'    => $request->table_id
+        ]);
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Rows  $rows
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Rows $rows)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Rows  $rows
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Rows $rows)
-    {
-        //
+        return redirect( route('rows.index', $request->table_id ) );
     }
 
     /**

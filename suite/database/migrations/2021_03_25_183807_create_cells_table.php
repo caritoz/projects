@@ -14,9 +14,13 @@ class CreateCellsTable extends Migration
     public function up()
     {
         Schema::create('cells', function (Blueprint $table) {
-            $table->id();
+
             $table->unsignedBigInteger('row_id');
             $table->unsignedBigInteger('column_id');
+
+            // settings primary keys
+            $table->primary(['row_id','column_id']);
+
             $table->string('description')->nullable();
             $table->timestamps();
 

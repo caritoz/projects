@@ -43,8 +43,8 @@ class ApiTest extends TestCase
     public function test_relationships_are_defined()
     {
 
-        $this->assertInstanceOf(BelongsTo::class, (new \App\Cells())->column());
-        $this->assertInstanceOf(BelongsTo::class, (new \App\Cells())->column());
+        $this->assertInstanceOf(BelongsTo::class, (new \App\Cells())->columns());
+        $this->assertInstanceOf(BelongsTo::class, (new \App\Cells())->rows());
 
         $this->assertInstanceOf(BelongsTo::class, (new \App\Rows())->table());
         $this->assertInstanceOf(BelongsTo::class, (new \App\Columns())->table());
@@ -76,9 +76,9 @@ class ApiTest extends TestCase
     public function test_can_create_cells_in_tables()
     {
         factory(Cells::class)->create([
-            'description'   => $this->faker->paragraph,
             'row_id'        => factory(Rows::class)->create()->id,
-            'column_id'     => factory(Columns::class)->create()->id
+            'column_id'     => factory(Columns::class)->create()->id,
+            'description'   => $this->faker->paragraph
         ]);
 
         $this->assertTrue(true);

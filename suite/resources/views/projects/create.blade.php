@@ -25,7 +25,7 @@
                         </div>
 
                         <button type="submit" class="btn btn-primary">Add</button>
-                        <a href="{{ route('tables.index', $project->id)}}" class="btn btn-link">Cancel</a>
+                        <a href="/projects" class="btn btn-link">Cancel</a>
                     </form>
                 </div>
             </div>
